@@ -37,7 +37,7 @@ precision = va_arg(list, int);
 }
 
 *i = curr_i - 1;
- 
+
 if (precision == -1)
 {
 switch (format[curr_i])
