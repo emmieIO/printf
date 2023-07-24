@@ -39,9 +39,6 @@ len2 = printf("Percent:[%%]\n");
 _printf("Len:[%d]\n", len);
 printf("Len:[%d]\n", len2);
 _printf("Unknown:[%r]\n");
-<<<<<<< HEAD
 printf("Unknown:[%r]\n");
-=======
->>>>>>> a5281c1d3a3574b6210c68d245fce2108967d5fa
 return (0);
 }
