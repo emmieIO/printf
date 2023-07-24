@@ -1,13 +1,12 @@
 #include "main.h"
-#include <ctype.h>
 
 /**
- * get_precision - Calculates the precision for printing.
- * @format: Formatted string in which to print the arguments.
- * @i: Pointer to the current index in the format string.
- * @list: List of arguments to be printed.
+ * get_precision - Calculates the precision for printing
+ * @format: Formatted string in which to print the arguments
+ * @i: List of arguments to be printed.
+ * @list: list of arguments.
  *
- * Return: Precision value or -1 if not specified or invalid.
+ * Return: Precision.
  */
 int get_precision(const char *format, int *i, va_list list)
 {
@@ -15,56 +14,28 @@ int curr_i = *i + 1;
 int precision = -1;
 
 if (format[curr_i] != '.')
-{
 return (precision);
-}
 
 precision = 0;
-curr_i++;
 
-if (isdigit(format[curr_i]))
+for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
 {
-while (isdigit(format[curr_i]))
+if (is_digit(format[curr_i]))
 {
-precision = precision * 10 + (format[curr_i] - '0');
-curr_i++;
-}
+precision *= 10;
+precision += format[curr_i] - '0';
 }
 else if (format[curr_i] == '*')
 {
 curr_i++;
 precision = va_arg(list, int);
+break;
+}
+else
+break;
 }
 
 *i = curr_i - 1;
-
-if (precision == -1)
-{
-switch (format[curr_i])
-{
-case 'd':
-case 'i':
-case 'o':
-case 'u':
-case 'x':
-case 'X':
-case 'f':
-case 'e':
-case 'E':
-case 'g':
-case 'G':
-case 'a':
-case 'A':
-case 'c':
-case 's':
-case 'p':
-case 'r':
-precision = 0;
-break;
-default:
-break;
-}
-}
 
 return (precision);
 }
