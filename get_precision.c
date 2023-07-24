@@ -1,44 +1,70 @@
 #include "main.h"
+#include <ctype.h>
 
 /**
- * get_precision - Extracts the precision value from the format string.
- * @format: The format string.
- * @i: Pointer to the current position in the format string.
- * @list: The va_list containing the variable arguments.
+ * get_precision - Calculates the precision for printing.
+ * @format: Formatted string in which to print the arguments.
+ * @i: Pointer to the current index in the format string.
+ * @list: List of arguments to be printed.
  *
- * Return: (precision) for valid conversion specifiers, (-1) for unsupported specifiers.
+ * Return: Precision value or -1 if not specified or invalid.
  */
 int get_precision(const char *format, int *i, va_list list)
 {
-int precision = -1; /* Default precision value (unset) */
+int curr_i = *i + 1;
+int precision = -1;
 
-/* Check if the precision is specified in the format string */
-if (format[*i] == '.')
+if (format[curr_i] != '.')
 {
-*i += 1; /* Move to the next character after '.' */
-
-/* Parse the precision value from the format string */
-precision = 0;
-while (format[*i] >= '0' && format[*i] <= '9')
-{
-precision = precision * 10 + (format[*i] - '0');
-*i += 1;
-}
-}
-
-/* Check the conversion specifier to determine if it's a numeric value or a string */
-char conversion = format[*i];
-if (conversion == 'd' || conversion == 'i' || conversion == 'o' ||
-conversion == 'u' || conversion == 'x' || conversion == 'X' ||
-conversion == 'f' || conversion == 'F' || conversion == 'e' ||
-conversion == 'E' || conversion == 'g' || conversion == 'G' ||
-conversion == 'a' || conversion == 'A' || conversion == 'c' ||
-conversion == 's' || conversion == 'p' || conversion == 'n')
-{
-/* If the conversion specifier is valid for precision, return the precision value */
 return (precision);
 }
 
-/* For unsupported conversion specifiers, precision is ignored */
-return (-1);
+precision = 0;
+curr_i++;
+
+if (isdigit(format[curr_i]))
+{
+while (isdigit(format[curr_i]))
+{
+precision = precision * 10 + (format[curr_i] - '0');
+curr_i++;
+}
+}
+else if (format[curr_i] == '*')
+{
+curr_i++;
+precision = va_arg(list, int);
+}
+
+*i = curr_i - 1;
+ 
+if (precision == -1)
+{
+switch (format[curr_i])
+{
+case 'd':
+case 'i':
+case 'o':
+case 'u':
+case 'x':
+case 'X':
+case 'f':
+case 'e':
+case 'E':
+case 'g':
+case 'G':
+case 'a':
+case 'A':
+case 'c':
+case 's':
+case 'p':
+case 'r':
+precision = 0;
+break;
+default:
+break;
+}
+}
+
+return (precision);
 }
