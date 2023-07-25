@@ -1,33 +1,44 @@
-#include "main.h"
-#include <ctype.h>
+#include <stdbool.h>
 
 /**
- * get_precision - Extracts the precision value from the format string.
- * @format: Formatted string in which to print the arguments.
- * @i: Pointer to the current index in the format string.
- * @list: List of arguments.
+ * get_precision - Calculates the precision for printing
+ * @format: Formatted string in which to print the arguments
+ * @i: List of arguments to be printed.
+ * @list: list of arguments.
  *
- * Return: (Precision value).
+ * Return: (Precision).
  */
 int get_precision(const char *format, int *i, va_list list)
 {
 int curr_i = *i + 1;
 int precision = -1;
+char curr_char = format[curr_i];
 
-if (format[curr_i] != '.')
+if (curr_char != '.')
 return (precision);
 
 precision = 0;
-curr_i++; /* Move to the character after '.'. */
+curr_i++; /* Move past the '.' character. */
 
-/* Extract the precision value using a while loop. */
-while (isdigit(format[curr_i]))
+/* Check for '*' or numeric value: Get precision from the format string. */
+curr_char = format[curr_i];
+if (curr_char == '*')
 {
-precision = precision * 10 + (format[curr_i] - '0');
+curr_i++; /* Move past the '*' character. */
+precision = va_arg(list, int);
+}
+else if (isdigit(curr_char))
+{
+while (isdigit(curr_char))
+{
+precision = precision * 10 + (curr_char - '0');
 curr_i++;
+curr_char = format[curr_i];
+}
 }
 
 *i = curr_i - 1;
+
 return (precision);
 }
 
